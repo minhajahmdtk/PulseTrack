@@ -1,0 +1,21 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+
+{% block title %}Doctor Details{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h3 class="mb-4">Doctor Details</h3>
+    <p><strong>Full Name:</strong> {{ doctor.first_name }} {{ doctor.last_name }}</p>
+    <p><strong>Email:</strong> {{ doctor.email }}</p>
+    <p><strong>Phone:</strong> {{ doctor.phone }}</p>
+    <p><strong>Specialty:</strong> {{ doctor.specialty }}</p>
+    <p><strong>Gender:</strong> {{ doctor.gender }}</p>
+    <p><strong>Status:</strong> {% if doctor.is_active %}Active{% else %}Inactive{% endif %}</p>
+    <p><strong>Date Joined:</strong> {{ doctor.date_joined }}</p>
+
+    <a href="{% url 'view_doctors' %}" class="btn btn-secondary mt-3">← Back</a>
+  </div>
+</div>
+{% endblock %}

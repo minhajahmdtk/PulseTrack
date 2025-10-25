@@ -1,0 +1,25 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+
+{% block title %}Edit Doctor Status{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 mx-auto" style="max-width: 500px; padding: 30px;">
+  <h4 class="mb-4 text-center">Edit Status: {{ doctor.first_name }} {{ doctor.last_name }}</h4>
+  
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select name="status" id="status" class="form-select">
+        <option value="active" {% if doctor.is_active %}selected{% endif %}>Active</option>
+        <option value="inactive" {% if not doctor.is_active %}selected{% endif %}>Inactive</option>
+      </select>
+    </div>
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-success">Update Status</button>
+      <a href="{% url 'view_doctors' %}" class="btn btn-secondary">← Back</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
