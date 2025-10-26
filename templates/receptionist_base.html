@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Receptionist Dashboard{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'PulseTrack.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+  }
+  .navbar {
+    background-color: #000000;
+  }
+  .navbar .nav-link, .navbar .navbar-brand {
+    color: white !important;
+  }
+  .dropdown-menu {
+    min-width: 180px;
+  }
+  .card {
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 15px;
+    transition: transform 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  .card h1 {
+    font-size: 3rem;
+    margin: 15px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ✅ Navbar -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="https://cdn-icons-png.flaticon.com/512/2966/2966327.png" alt="Logo" width="40" class="me-2">
+      <span>Hospital Management System</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="{% url 'receptionist_home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Add Appointment</a></li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="appointmentsDropdown" data-bs-toggle="dropdown">Appointments</a>
+          <ul class="dropdown-menu" aria-labelledby="appointmentsDropdown">
+            <li><a class="dropdown-item" href="{% url 'new_appointments' %}">New Appointments</a></li>
+            <li><a class="dropdown-item" href="{% url 'confirmed_appointment' %}">Confirmed Appointment</a></li>
+            <li><a class="dropdown-item" href="{% url 'all_appointments' %}">All Appointments</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="patientsDropdown" data-bs-toggle="dropdown">Patients</a>
+          <ul class="dropdown-menu" aria-labelledby="patientsDropdown">
+            <li><a class="dropdown-item" href="{% url 'add_patient' %}">Add Patient</a></li>
+            <li><a class="dropdown-item" href="{% url 'patient_records' %}">View Patients</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ✅ User Dropdown (Change Password + Logout) -->
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-person-circle"></i> {{ request.user.username|default:"Receptionist" }}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="{% url 'home' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ✅ Main Content -->
+<div class="container mt-4">
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

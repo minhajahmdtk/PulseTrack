@@ -1,0 +1,54 @@
+{% extends 'receptionist_base.html' %}
+{% load static %}
+
+{% block title %}Confirmed Appointments{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">✅ Confirmed Appointments</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Disease</th>
+                    <th>Symptoms</th>
+                    <th>Appointment Date</th>
+                    <th>Appointment Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.patient }}</td>
+                    <td>{{ appointment.doctor }}</td>
+                    <td>{{ appointment.disease|default:"N/A" }}</td>
+                    <td>{{ appointment.symptoms|default:"N/A" }}</td>
+                    <td>{{ appointment.appointment_date|default:"Not Set"|date:"M d, Y" }}</td>
+                    <td>{{ appointment.appointment_time|default:"Not Set" }}</td>
+                    <td>
+                        <span class="badge bg-success">{{ appointment.status }}</span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-muted">No confirmed appointments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

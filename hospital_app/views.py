@@ -9,6 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 
 
+
 # -------------------------
 # Static pages
 # -------------------------
@@ -203,12 +204,13 @@ def add_appointments(request, doctor_id):
         symptoms = request.POST.get('symptoms')
 
         if disease and symptoms:
+            # Create appointment with no date yet
             Appointment.objects.create(
                 patient=patient,
                 doctor=doctor,
                 disease=disease,
                 symptoms=symptoms,
-                status='Pending'
+                status='Pending'  # date is left as None for receptionist to assign
             )
             messages.success(request, "Appointment request submitted successfully!")
             return redirect('view_appointments')
@@ -445,4 +447,154 @@ def delete_receptionist(request, r_id):
 
 #----------receptionist home-----------------   
 def receptionist_home(request):
-    return render(request, 'receptionist_home.html')
+    # Count appointments by status
+    new_count = Appointment.objects.filter(status='Pending').count()
+    confirmed_count = Appointment.objects.filter(status='Confirmed').count()
+    completed_count = Appointment.objects.filter(status='Completed').count()
+    cancelled_count = Appointment.objects.filter(status='Cancelled').count()
+    total_count = Appointment.objects.all().count()
+
+  
+    return render(request, 'receptionist_home.html', {
+        'new_appointments': new_count,
+        'confirmed_appointments': confirmed_count,
+        'total_appointments': total_count,
+        'completed_appointments': completed_count,
+        'cancelled_appointments': cancelled_count,
+    })
+
+def new_appointments(request):
+    # Fetch all appointments ordered by date
+    appointments = Appointment.objects.all().order_by('appointment_date')
+    return render(request, 'new_appointments.html', {'appointments': appointments})
+
+def assign_status(request, s_id):
+    appointment = get_object_or_404(Appointment, id=s_id)
+
+    if request.method == 'POST':
+        # Update status
+        new_status = request.POST.get('status')
+        if new_status in ['Pending', 'Confirmed', 'Completed', 'Cancelled']:
+            appointment.status = new_status
+        else:
+            messages.error(request, "Invalid status selected.")
+            return redirect('assign_status', s_id=s_id)
+
+        # Update date and time directly from form inputs
+        new_date = request.POST.get('appointment_date')
+        if new_date:
+            appointment.appointment_datetime = new_date  # Django handles conversion
+
+        new_time = request.POST.get('appointment_time')
+        if new_time:
+            appointment.appointment_time = new_time  # Django handles conversion
+
+        appointment.save()
+        messages.success(request, "Appointment updated successfully.")
+        return redirect('new_appointments')
+
+    return render(request, 'assign_status.html', {'appointment': appointment})
+
+
+def confirmed_appointment(request):
+    appointments = Appointment.objects.filter(status='Confirmed').order_by('appointment_date')
+    return render(request, 'confirmed_appointment.html', {'appointments': appointments})
+
+def all_appointments(request):
+    appointments = Appointment.objects.all().order_by('-appointment_date')
+    return render(request, 'all_appointments.html', {'appointments': appointments})
+
+def delete_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    appointment.delete()
+    messages.success(request, "Appointment deleted successfully.")
+    return redirect('all_appointments')
+
+def receptionist_logout (request):
+    auth.logout(request)
+    messages.success(request, "You have been logged out.")
+    return redirect('receptionist_login')
+
+# def receptionist_change(request):
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         old_password = request.POST.get('old_password')
+#         new_password = request.POST.get('new_password')
+#         confirm_password = request.POST.get('confirm_password')
+
+#         # Validate input
+#         if not email or not old_password or not new_password or not confirm_password:
+#             messages.error(request, "Please fill in all fields.")
+#             return redirect('receptionist_change')
+
+#         if new_password != confirm_password:
+#             messages.error(request, "New passwords do not match.")
+#             return redirect('receptionist_change')
+
+#         # Find receptionist by email
+#         try:
+#             receptionist = Receptionist.objects.get(email=email)
+#         except Receptionist.DoesNotExist:
+#             messages.error(request, "No receptionist found with this email.")
+#             return redirect('receptionist_change')
+
+#         # Check old password (plain text — for now)
+#         if receptionist.password != old_password:
+#             messages.error(request, "Old password is incorrect.")
+#             return redirect('receptionist_change')
+
+#         # Save new password
+#         receptionist.password = new_password
+#         receptionist.save()
+#         messages.success(request, "Password changed successfully!")
+#         return redirect('receptionist_login')  # Redirect after success
+
+#     return render(request, 'receptionist_change.html')
+
+
+# ---------------- Patient View ----------------
+
+def patient_records(request):
+    # Fetch all patients from the database
+    patients = Patient.objects.all()
+    
+    return render(request, 'patient_records.html', {'patients': patients})
+
+def delete_patient_record(request, patient_id):
+    patient = get_object_or_404(Patient, id=patient_id)
+    patient.delete()
+    messages.success(request, "Patient record deleted successfully.")
+    return redirect('patient_records')
+
+def add_patient(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        Gender = request.POST.get('Gender')
+        address = request.POST.get('address')
+        blood_group = request.POST.get('blood_group')
+        image = request.FILES.get('image')
+
+        # Simple validation
+        if not first_name or not last_name or not email or not phone:
+            messages.error(request, "Please fill in all required fields.")
+            return redirect('add_patient')
+
+        # Save patient
+        patient = Patient(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone=phone,
+            Gender=Gender,
+            address=address,
+            blood_group=blood_group,
+            image=image
+        )
+        patient.save()
+        messages.success(request, f"Patient {first_name} {last_name} added successfully!")
+        return redirect('patient_records')  # redirect to patient list page
+
+    return render(request, 'add_patient.html')           

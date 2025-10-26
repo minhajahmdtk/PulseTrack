@@ -1,0 +1,70 @@
+{% extends 'receptionist_base.html' %}
+
+{% block title %}Assign Status{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Assign Status for Appointment</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Patient Name:</strong> {{ appointment.patient }}</p>
+            <p><strong>Doctor:</strong> {{ appointment.doctor }}</p>
+            <p><strong>Current Appointment Date:</strong> {{ appointment.appointment_datetime|date:"M d, Y" }}</p>
+            <p><strong>Current Appointment Time:</strong> {{ appointment.appointment_time|time:"H:i"|default:"Not Set" }}</p>
+            <p><strong>Current Status:</strong> 
+                <span class="badge 
+                    {% if appointment.status == 'Pending' %}bg-warning text-dark{% endif %}
+                    {% if appointment.status == 'Confirmed' %}bg-success{% endif %}
+                    {% if appointment.status == 'Completed' %}bg-primary{% endif %}
+                    {% if appointment.status == 'Cancelled' %}bg-danger{% endif %}">
+                    {{ appointment.status }}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="appointment_date" class="form-label">Set Appointment Date</label>
+            <input type="date" 
+                   name="appointment_date" 
+                   id="appointment_date" 
+                   class="form-control" 
+                   value="{{ appointment.appointment_datetime|date:'Y-m-d' }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="appointment_time" class="form-label">Set Appointment Time</label>
+            <input type="time" 
+                   name="appointment_time" 
+                   id="appointment_time" 
+                   class="form-control" 
+                   value="{{ appointment.appointment_time|time:'H:i' }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="status" class="form-label">Select Status</label>
+            <select name="status" id="status" class="form-select">
+                <option value="Pending" {% if appointment.status == "Pending" %}selected{% endif %}>Pending</option>
+                <option value="Confirmed" {% if appointment.status == "Confirmed" %}selected{% endif %}>Confirmed</option>
+                <option value="Completed" {% if appointment.status == "Completed" %}selected{% endif %}>Completed</option>
+                <option value="Cancelled" {% if appointment.status == "Cancelled" %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{% url 'view_appointments' %}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,11 +1,11 @@
-{% extends 'base_patient.html' %}
+{% extends 'receptionist_base.html' %}
 {% load static %}
 
-{% block title %}My Appointments{% endblock %}
+{% block title %}All Appointments{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4 text-center">🗓️ My Appointments</h2>
+    <h2 class="mb-4 text-center">📋 All Appointments</h2>
 
     {% if messages %}
         {% for message in messages %}
@@ -20,9 +20,10 @@
         <table class="table table-bordered table-hover align-middle text-center">
             <thead class="table-dark">
                 <tr>
-                    <th>Doctor Name</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
                     <th>Disease</th>
-                    <th>Symptoms / Description</th>
+                    <th>Symptoms</th>
                     <th>Appointment Date</th>
                     <th>Appointment Time</th>
                     <th>Status</th>
@@ -32,23 +33,12 @@
             <tbody>
                 {% for appointment in appointments %}
                 <tr>
-                    <td>{{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</td>
-                    <td>{{ appointment.disease }}</td>
-                    <td>{{ appointment.symptoms }}</td>
-                    <td>
-                        {% if appointment.appointment_date%}
-                            {{ appointment.appointment_date|date:"M d, Y" }}
-                        {% else %}
-                            Not Set
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if appointment.appointment_time %}
-                            {{ appointment.appointment_time|time:"h:i A" }}
-                        {% else %}
-                            Not Set
-                        {% endif %}
-                    </td>
+                    <td>{{ appointment.patient }}</td>
+                    <td>{{ appointment.doctor }}</td>
+                    <td>{{ appointment.disease|default:"N/A" }}</td>
+                    <td>{{ appointment.symptoms|default:"N/A" }}</td>
+                    <td>{{ appointment.appointment_date|default:"Not Set"|date:"M d, Y" }}</td>
+                    <td>{{ appointment.appointment_time|default:"Not Set" }}</td>
                     <td>
                         <span class="badge 
                             {% if appointment.status == 'Pending' %}bg-warning text-dark{% endif %}
@@ -59,7 +49,7 @@
                         </span>
                     </td>
                     <td>
-                        <a href="{% url 'delete_appointment' appointment.id %}" class="btn btn-danger btn-sm"
+                        <a href="{% url 'delete_appointment' appointment.id %}" class="btn btn-sm btn-danger" 
                            onclick="return confirm('Are you sure you want to delete this appointment?');">
                             Delete
                         </a>
@@ -67,7 +57,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7" class="text-muted">No appointments found.</td>
+                    <td colspan="8" class="text-muted">No appointments found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
