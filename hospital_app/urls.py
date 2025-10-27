@@ -52,5 +52,11 @@ urlpatterns = [
     path('delete_appointment/<int:app_id>/', views.delete_appointment, name='delete_appointment'),
     path('add-patient/', views.add_patient, name='add_patient'),
     path('receptionist-logout/', views.receptionist_logout, name='receptionist_logout'),
-    # path('change-password/', views.receptionist_change, name='receptionist_change'),
+    path('add-appointment-receptionist', views.add_appointment_receptionist, name='add_appointment_receptionist'),
+
+    # ✅ Doctor Page
+    path('doctor-home/', views.doctor_home, name='doctor_home'),
+    path('appointments-doctor/', views.appointments_doctor, name='appointments_doctor'),
+    path('prescription/<int:d_id>/', views.doctor_prescription, name='doctor_prescription'),
+    path('view-prescriptions/', views.view_prescriptions, name='view_prescriptions'),
 ]

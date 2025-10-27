@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib import auth
 from django.contrib.auth.models import User
-from .models import Doctor, Patient, Receptionist,Appointment
+from .models import Doctor, Patient, Receptionist,Appointment,Prescription
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
@@ -32,7 +32,7 @@ def admin_login(request):
         password = request.POST['password']
 
         user = authenticate(username=username, password=password)
-        if user is not None and user.is_superuser:
+        if user is not None:
             login(request, user)
             messages.success(request, f"Welcome {user.username}")
             return redirect('admin_home')  # You can create this page
@@ -143,7 +143,7 @@ def doctor_login(request):
         if user is not None:
             auth.login(request, user)
             messages.success(request, " logged in successfully!")
-            return redirect('home')  # or a doctor dashboard page
+            return redirect('doctor_home')  # or a doctor dashboard page
         else:
             messages.error(request, "Incorrect username or password!")
             return redirect('doctor_login')
@@ -483,7 +483,7 @@ def assign_status(request, s_id):
         # Update date and time directly from form inputs
         new_date = request.POST.get('appointment_date')
         if new_date:
-            appointment.appointment_datetime = new_date  # Django handles conversion
+            appointment.appointment_date = new_date  # Django handles conversion
 
         new_time = request.POST.get('appointment_time')
         if new_time:
@@ -510,46 +510,50 @@ def delete_appointment(request, appointment_id):
     messages.success(request, "Appointment deleted successfully.")
     return redirect('all_appointments')
 
+def add_appointment_receptionist(request):
+    if request.method == 'POST':
+        doctor_id = request.POST.get('doctor')
+        patient_id = request.POST.get('patient')
+        appointment_date = request.POST.get('appointment_date')
+        appointment_time = request.POST.get('appointment_time')
+        disease = request.POST.get('disease')
+        symptoms = request.POST.get('symptoms')
+        status = request.POST.get('status', 'Pending')
+
+        # Fetch related doctor and patient objects
+        try:
+            doctor = Doctor.objects.get(id=doctor_id)
+            patient = Patient.objects.get(id=patient_id)
+        except (Doctor.DoesNotExist, Patient.DoesNotExist):
+            messages.error(request, "Invalid Doctor or Patient selected.")
+            return redirect('add_appointment')
+
+        # Save appointment
+        appointment = Appointment(
+            doctor=doctor,
+            patient=patient,
+            appointment_date=appointment_date,
+            appointment_time=appointment_time,
+            disease=disease,
+            symptoms=symptoms,
+            status=status
+        )
+        appointment.save()
+
+        messages.success(request, f"Appointment for {patient.first_name} {patient.last_name} with Dr. {doctor.first_name} added successfully!")
+        return redirect('all_appointments')  # Redirect to appointment list
+
+    # GET request: load doctors and patients
+    doctors = Doctor.objects.all()
+    patients = Patient.objects.all()
+
+    return render(request, 'add_appointment_receptionist.html', {'doctors': doctors, 'patients': patients})
+
 def receptionist_logout (request):
     auth.logout(request)
     messages.success(request, "You have been logged out.")
     return redirect('receptionist_login')
 
-# def receptionist_change(request):
-#     if request.method == 'POST':
-#         email = request.POST.get('email')
-#         old_password = request.POST.get('old_password')
-#         new_password = request.POST.get('new_password')
-#         confirm_password = request.POST.get('confirm_password')
-
-#         # Validate input
-#         if not email or not old_password or not new_password or not confirm_password:
-#             messages.error(request, "Please fill in all fields.")
-#             return redirect('receptionist_change')
-
-#         if new_password != confirm_password:
-#             messages.error(request, "New passwords do not match.")
-#             return redirect('receptionist_change')
-
-#         # Find receptionist by email
-#         try:
-#             receptionist = Receptionist.objects.get(email=email)
-#         except Receptionist.DoesNotExist:
-#             messages.error(request, "No receptionist found with this email.")
-#             return redirect('receptionist_change')
-
-#         # Check old password (plain text — for now)
-#         if receptionist.password != old_password:
-#             messages.error(request, "Old password is incorrect.")
-#             return redirect('receptionist_change')
-
-#         # Save new password
-#         receptionist.password = new_password
-#         receptionist.save()
-#         messages.success(request, "Password changed successfully!")
-#         return redirect('receptionist_login')  # Redirect after success
-
-#     return render(request, 'receptionist_change.html')
 
 
 # ---------------- Patient View ----------------
@@ -577,11 +581,6 @@ def add_patient(request):
         blood_group = request.POST.get('blood_group')
         image = request.FILES.get('image')
 
-        # Simple validation
-        if not first_name or not last_name or not email or not phone:
-            messages.error(request, "Please fill in all required fields.")
-            return redirect('add_patient')
-
         # Save patient
         patient = Patient(
             first_name=first_name,
@@ -598,3 +597,57 @@ def add_patient(request):
         return redirect('patient_records')  # redirect to patient list page
 
     return render(request, 'add_patient.html')           
+
+
+# ---------------- Doctor Page ----------------
+
+def doctor_home(request):
+    return render(request, 'doctor_home.html')
+
+def appointments_doctor(request):
+    # Check if user is logged in
+    if not request.user.is_authenticated:
+        return redirect('doctor_login')
+
+    try:
+        # Find doctor whose email matches the logged-in user
+        doctor = Doctor.objects.get(email=request.user.email)
+    except Doctor.DoesNotExist:
+        messages.error(request, "Doctor profile not found for this account.")
+        return redirect('doctor_login')
+
+    # Fetch only that doctor's patients (appointments)
+    appointments = Appointment.objects.filter(doctor=doctor).order_by('-appointment_date', '-appointment_time')
+
+    return render(request, 'appointments_doctor.html', {'doctor': doctor,
+        'appointments': appointments})
+
+def doctor_prescription(request, d_id):
+    # Get the appointment for which doctor is adding prescription
+    appointment = get_object_or_404(Appointment, id=d_id)
+
+    if request.method == 'POST':
+        # Get data from form
+        patient_name = appointment.patient.first_name + " " + appointment.patient.last_name
+        symptoms = appointment.symptoms
+        disease = request.POST.get('disease')
+        medicines = request.POST.get('medicines')
+        notes = request.POST.get('notes')
+
+        # Save prescription
+        Prescription.objects.create(
+            patient_name=patient_name,
+            symptoms=symptoms,
+            disease=disease,
+            medicines=medicines,
+            notes=notes
+        )
+
+        messages.success(request, "Prescription saved successfully!")
+        return redirect('appointments_doctor')  # redirect to appointments list
+
+    return render(request, 'doctor_prescription.html', {'appointment': appointment})
+
+def view_prescriptions(request):
+    prescriptions = Prescription.objects.all().order_by('-id')  # latest first
+    return render(request, 'view_prescriptions.html', {'prescriptions': prescriptions})

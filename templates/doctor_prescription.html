@@ -1,0 +1,43 @@
+{% extends 'doctor_base.html' %}
+{% block title %}Add Prescription - HMS{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h3 class="text-center text-primary mb-4">🧾 Add Prescription</h3>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label fw-bold">Patient Name:</label>
+        <input type="text" class="form-control" value="{{ appointment.patient }}" readonly>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Symptoms:</label>
+        <textarea class="form-control" rows="3" readonly>{{ appointment.symptoms }}</textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Disease:</label>
+        <input type="text" name="disease" class="form-control" placeholder="Enter diagnosed disease" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Medicines:</label>
+        <textarea name="medicines" class="form-control" rows="4" placeholder="List prescribed medicines" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Additional Notes:</label>
+        <textarea name="notes" class="form-control" rows="3" placeholder="Enter additional notes (optional)"></textarea>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-success px-4">💊 Save Prescription</button>
+        <a href="{% url 'appointments_doctor' %}" class="btn btn-secondary px-4 ms-2">Back</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

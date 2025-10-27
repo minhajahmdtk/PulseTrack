@@ -94,3 +94,16 @@ class Appointment(models.Model):
         return f"Appointment: {self.patient} with {self.doctor} ({self.status})"
 
 
+# -----------------------
+# prescription Model
+# -----------------------   
+
+class Prescription(models.Model):
+    patient_name = models.CharField(max_length=100)
+    symptoms = models.TextField()
+    disease = models.CharField(max_length=200)
+    medicines = models.TextField()
+    notes = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Prescription for {self.patient_name}"
