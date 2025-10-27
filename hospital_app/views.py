@@ -329,6 +329,10 @@ def doctor_register(request):
         address = request.POST['address']
         image = request.FILES.get('image')
 
+        if len(password) < 6:
+            messages.info(request, "Password must be at least 6 characters long!")
+            return redirect('doctor_register')
+
         if password != confirm_password:
             messages.info(request, "Passwords do not match!")
             return redirect('doctor_register')
@@ -355,7 +359,7 @@ def doctor_register(request):
             image=image,
         )
 
-        
+       
         return redirect('doctor_login')
 
     return render(request, 'doctor_register.html')
@@ -440,7 +444,15 @@ def add_receptionist(request):
     return render(request, 'add_receptionist.html')
 
 def view_receptionists(request):
-    re = Receptionist.objects.all()
+    receptionists_list = Receptionist.objects.all().order_by('id')
+    paginator = Paginator(receptionists_list, 5)  # Show 3 receptionists per page
+
+    page_number = request.GET.get('page', 1)
+    try:
+        re = paginator.page(page_number)
+    except (InvalidPage, EmptyPage):
+        re = paginator.page(paginator.num_pages)
+
     return render(request, 'view_receptionists.html', {'receptionists': re})
 
 
@@ -599,7 +611,6 @@ def add_patient(request):
             image=image
         )
         patient.save()
-        messages.success(request, f"Patient {first_name} {last_name} added successfully!")
         return redirect('patient_records')  # redirect to patient list page
 
     return render(request, 'add_patient.html')           

@@ -12,7 +12,7 @@ class Doctor(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=10)
     Gender = models.CharField(max_length=10, choices=[('Male','Male'),('Female','Female'),('Other','Other')],default='Male')
     address = models.TextField(blank=True, null=True)
     specialization = models.CharField(max_length=100, blank=True, null=True)
@@ -32,7 +32,7 @@ class Doctor(models.Model):
 class Patient(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
     Gender = models.CharField(max_length=10, choices=[('Male','Male'),('Female','Female'),('Other','Other')], default='Male')
     address = models.TextField(blank=True, null=True)
@@ -52,7 +52,7 @@ class Patient(models.Model):
 class Receptionist(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
     gender = models.CharField(
         choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')],

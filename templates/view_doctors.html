@@ -1,17 +1,17 @@
 {% extends 'base_admin.html' %}
 {% load static %}
 
-{% block title %}Doctors List{% endblock %}
+{% block title %}Receptionists List{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-  <h2>Doctors List</h2>
+  <h2>Receptionists List</h2>
 
   <!-- Search bar -->
   <div class="row mb-3">
       <div class="col-md-4 ms-auto">
           <form method="GET" class="d-flex">
-              <input type="text" name="search" value="{{ request.GET.search }}" class="form-control me-2" placeholder="Search doctors...">
+              <input type="text" name="search" value="{{ request.GET.search }}" class="form-control me-2" placeholder="Search receptionists...">
               <button type="submit" class="btn btn-primary">Search</button>
           </form>
       </div>
@@ -22,48 +22,42 @@
           <thead class="table-dark">
               <tr>
                   <th>Full Name</th>
+                  <th>Username</th>
                   <th>Contact</th>
                   <th>Email</th>
                   <th>Gender</th>
                   <th>Address</th>
-                  <th>Status</th>
                   <th>Action</th>
               </tr>
           </thead>
           <tbody>
-              {% for doctor in doctors %}
+              {% for receptionist in receptionists %}
               <tr>
-                  <td>{{ doctor.first_name }} {{ doctor.last_name }}</td>
-                  <td>{{ doctor.phone }}</td>
-                  <td>{{ doctor.email }}</td>
-                  <td>{{ doctor.Gender }}</td>
-                  <td>{{ doctor.address|default:"N/A" }}</td>
+                  <td>{{ receptionist.first_name }} {{ receptionist.last_name }}</td>
+                  <td>{{ receptionist.username }}</td>
+                  <td>{{ receptionist.contact }}</td>
+                  <td>{{ receptionist.email }}</td>
+                  <td>{{ receptionist.gender }}</td>
+                  <td>{{ receptionist.address|default:"N/A" }}</td>
                   <td>
-                      {% if doctor.is_active %}
-                          <span class="badge bg-success">Active</span>
-                      {% else %}
-                          <span class="badge bg-secondary">Inactive</span>
-                      {% endif %}
-                  </td>
-                  <td>
-                      <a href="{% url 'edit_doctor' doctor.id %}" class="btn btn-info btn-sm">Edit Status</a>
-                      <a href="{% url 'delete_doctor' doctor.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                      <a href="{% url 'edit_receptionist' receptionist.id %}" class="btn btn-info btn-sm">Edit</a>
+                      <a href="{% url 'delete_receptionist' receptionist.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this receptionist?');">Delete</a>
                   </td>
               </tr>
               {% empty %}
-              <tr><td colspan="7" class="text-center">No doctors found</td></tr>
+              <tr><td colspan="7" class="text-center">No receptionists found</td></tr>
               {% endfor %}
           </tbody>
 
-          {% if doctors.paginator.num_pages > 1 %}
+          {% if receptionists.paginator.num_pages > 1 %}
           <tfoot>
               <tr>
                   <td colspan="7" class="text-center">
-                      {% for i in doctors.paginator.page_range %}
-                          {% if doctors.number == i %}
-                              <span class="btn btn-primary">{{ i }}</span>
+                      {% for i in receptionists.paginator.page_range %}
+                          {% if receptionists.number == i %}
+                              <span class="btn btn-dark">{{ i }}</span>
                           {% else %}
-                              <a href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="btn btn-light">{{ i }}</a>
+                              <a href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="btn btn-dark">{{ i }}</a>
                           {% endif %}
                       {% endfor %}
                   </td>

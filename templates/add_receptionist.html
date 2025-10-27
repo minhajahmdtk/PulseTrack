@@ -1,70 +1,87 @@
 {% extends 'base_admin.html' %}
 {% load static %}
 
-{% block title %}Add Receptionist{% endblock %}
+{% block title %}Add Receptionist - PulseTrack{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="card mx-auto" style="max-width: 500px; padding: 30px; box-shadow: 0 0 15px rgba(0,0,0,0.2);">
-    <h4 class="text-center mb-4">Add Receptionist</h4>
 
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      
-      <div class="mb-3">
-        <input type="text" name="username" class="form-control" placeholder="Username" required>
-      </div>
-      
-      <div class="mb-3">
-        <input type="text" name="first_name" class="form-control" placeholder="First Name" required>
-      </div>
+<link rel="stylesheet" href="{% static 'css/hms.css' %}">
 
-      <div class="mb-3">
-        <input type="text" name="last_name" class="form-control" placeholder="Last Name" required>
-      </div>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow border-0" style="max-width: 600px; width: 100%; border-radius: 10px;">
+    
+    <!-- Header -->
+    <div class="card-header text-center text-white py-3 bg-dark rounded-top">
+      <h4 class="fw-bold mb-0"> Add Receptionist</h4>
+      <p class="small mb-0 text-light">Register a new receptionist for PulseTrack Hospital</p>
+    </div>
 
-      <div class="mb-3">
-        <input type="email" name="email" class="form-control" placeholder="Email" required>
-      </div>
+    <!-- Body -->
+    <div class="card-body p-4">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="row g-3">
+          <div class="col-md-6">
+            <input type="text" name="username" class="form-control" placeholder="Username" required>
+          </div>
+          <div class="col-md-6">
+            <input type="email" name="email" class="form-control" placeholder="Email" required>
+          </div>
 
-      <div class="mb-3">
-        <input type="text" name="contact" class="form-control" placeholder="Contact Number" required>
-      </div>
+          <div class="col-md-6">
+            <input type="text" name="first_name" class="form-control" placeholder="First Name" required>
+          </div>
+          <div class="col-md-6">
+            <input type="text" name="last_name" class="form-control" placeholder="Last Name" required>
+          </div>
 
-      <div class="mb-3">
-        <input type="password" name="password" class="form-control" placeholder="Password" required>
-      </div>
+          <div class="col-md-6">
+            <input type="text" name="contact" class="form-control" placeholder="Contact Number" required>
+          </div>
+          <div class="col-md-6">
+            <select name="gender" class="form-select" required>
+              <option value="">Select Gender</option>   
+              <option>Male</option>     
+              <option>Female</option>     
+              <option>Other</option>    
+            </select>
+          </div>
 
-      <div class="mb-3">
-        <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
-      </div>
+          <div class="col-12">
+            <input type="text" name="address" class="form-control" placeholder="Address" required>
+          </div>
 
-      <div class="mb-3">
-        <select name="gender" class="form-select" required>
-          <option value="">Select Gender</option>   
-          <option>Male</option>     
-          <option>Female</option>     
-          <option>Other</option>    
-        </select>
-      </div>
+          <div class="col-md-6">
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
+          </div>
+          <div class="col-md-6">
+            <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
+          </div>
 
-      <div class="mb-3">
-        <input type="text" name="address" class="form-control" placeholder="Address" required>
-      </div>
+          <div class="col-12">
+            <input type="file" name="image" class="form-control">
+          </div>
+        </div>
 
-      <div class="mb-3">
-        <input type="file" name="image" class="form-control">
-      </div>
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-dark w-50 me-2 py-2">Add Receptionist</button>
+          <a href="{% url 'admin_home' %}" class="btn btn-secondary w-50 py-2">Cancel</a>
+        </div>
+      </form>
 
-      <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary">Add Receptionist</button>
-        <a href="{% url 'admin_home' %}" class="btn btn-secondary">Cancel</a>
+      {% if messages %}
+      <div class="mt-3">
+        {% for message in messages %}
+          <div class="alert alert-danger mt-2 text-center fw-semibold" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
       </div>
-
-      {% for message in messages %}
-        <div class="alert alert-danger mt-3">{{ message }}</div>
-      {% endfor %}
-    </form>
+      {% endif %}
+    </div>
   </div>
 </div>
+
+<script src="{% static 'javascript/hms.js' %}"></script>
 {% endblock %}

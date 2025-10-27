@@ -4,14 +4,23 @@
 {% block title %}Doctor Registration - HMS{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/doctor_register.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/hms.css' %}">
+
 <div class="container d-flex justify-content-center align-items-center min-vh-150">
   <div class="card register-card shadow-lg border-0">
+    
+    <div class="card-header text-center text-white py-3 bg-dark">
+      <h4 class="fw-bold mb-0">👨‍⚕️ Doctor Registration</h4>
+      <p class="small mb-0 text-light">Join our hospital network securely</p>
+    </div>
+
     <div class="card-body p-4">
-      <h4 class="text-center mb-4 text-primary fw-bold">Doctor Registration</h4>
+     
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row g-3">
+          
           <div class="col-md-6">
             <input type="text" name="username" placeholder="Username" class="form-control input-focus" required>
           </div>
@@ -45,14 +54,7 @@
               <option>Dermatologist</option>
               <option>Neurologist</option>
               <option>Orthopedic Surgeon</option>
-              <option>Pediatrician</option>
-              <option>Psychiatrist</option>
               <option>General Physician</option>
-              <option>ENT Specialist</option>
-              <option>Gynecologist</option>
-              <option>Oncologist</option>
-              <option>Radiologist</option>
-              <option>Pathologist</option>
             </select>
           </div>
           <div class="col-md-6">
@@ -71,15 +73,23 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 mt-3 py-2" onclick="RegisterBtn()">Register</button>
+        <button type="submit" class="btn btn-dark w-100 mt-3 py-2">Register</button>
       </form>
-{% for message in messages %}
-    <div class="alert alert-danger mt-3">{{ message }}</div>
-    {% endfor %}
-  </div>
+
       
+      {% if messages %}
+      <div class="mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} mt-2 text-center fw-semibold" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>
-script src="{% static 'javaScript/hms.js' %}"></script>
+
+
+<script src="{% static 'javascript/hms.js' %}"></script>
 {% endblock %}
