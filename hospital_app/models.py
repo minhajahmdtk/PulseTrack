@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+
 
 
 
@@ -15,7 +15,7 @@ class Doctor(models.Model):
     phone = models.CharField(max_length=15)
     Gender = models.CharField(max_length=10, choices=[('Male','Male'),('Female','Female'),('Other','Other')],default='Male')
     address = models.TextField(blank=True, null=True)
-    specialty = models.CharField(max_length=100, blank=True, null=True)
+    specialization = models.CharField(max_length=100, blank=True, null=True)
     image = models.ImageField(upload_to='doctor_images/', blank=True, null=True)
     is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -99,11 +99,12 @@ class Appointment(models.Model):
 # -----------------------   
 
 class Prescription(models.Model):
-    patient_name = models.CharField(max_length=100)
+    doctor_name = models.CharField(max_length=100, null=True, blank=True)
+    patient_name = models.CharField(max_length=100, null=True, blank=True)
     symptoms = models.TextField()
     disease = models.CharField(max_length=200)
     medicines = models.TextField()
     notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Prescription for {self.patient_name}"
+        return f"Prescription for {self.patient_name} by {self.doctor_name}"

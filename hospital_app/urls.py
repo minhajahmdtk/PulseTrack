@@ -6,6 +6,8 @@ urlpatterns = [
     path('admin-login/', views.admin_login, name='admin_login'),
     path('admin-home/', views.admin_home, name='admin_home'),
     path('logout/', views.logout_view, name='logout'),
+    path('about/', views.about, name='about'),
+    path('contact/', views.contact, name='contact'),
 
     # ✅ Patients URLs
     path('view-patients/', views.view_patients, name='view_patients'),
@@ -18,9 +20,10 @@ urlpatterns = [
     path('view-appointments/', views.view_appointments, name='view_appointments'),
     path('add-appointments/<int:doctor_id>/', views.add_appointments, name='add_appointments'),
     path('delete-appointment/<int:appointment_id>/', views.delete_appointment, name='delete_appointment'),
+    
 
     # ✅ Medical History
-    path('view-medical-history/', views.medical_history, name='medical_history'),
+    path('patient_medical_history/', views.patient_medical_history, name='patient_medical_history'),
 
     # ✅ Doctors
     path('view-doctors/', views.view_doctors, name='view_doctors'),
@@ -49,7 +52,7 @@ urlpatterns = [
     path('confirmed-appointment/', views.confirmed_appointment, name='confirmed_appointment'),
     path('all-appointments/', views.all_appointments, name='all_appointments'),
     path('patient_records/', views.patient_records, name='patient_records'),
-    path('delete_appointment/<int:app_id>/', views.delete_appointment, name='delete_appointment'),
+    path('delete_appointment/<int:appointment_id>/', views.delete_appointment, name='delete_appointment'),
     path('add-patient/', views.add_patient, name='add_patient'),
     path('receptionist-logout/', views.receptionist_logout, name='receptionist_logout'),
     path('add-appointment-receptionist', views.add_appointment_receptionist, name='add_appointment_receptionist'),
@@ -59,4 +62,7 @@ urlpatterns = [
     path('appointments-doctor/', views.appointments_doctor, name='appointments_doctor'),
     path('prescription/<int:d_id>/', views.doctor_prescription, name='doctor_prescription'),
     path('view-prescriptions/', views.view_prescriptions, name='view_prescriptions'),
+    path('delete_appointment_doctor/<int:app_id>/', views.delete_appointment_doctor, name='delete_appointment_doctor'),
+    path('doctor-logout/', views.doctor_logout, name='doctor_logout'),
+    path('delete_prescription/<int:pre_id>/', views.delete_prescription, name='delete_prescription'),
 ]

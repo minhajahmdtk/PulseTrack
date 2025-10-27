@@ -237,8 +237,14 @@ def delete_appointment(request, appointment_id):
     return redirect('view_appointments')
 # ---------------- Medical History ----------------
 
-def medical_history(request):
-    return render(request, 'view_medical_history.html')
+def patient_medical_history(request):
+    if not request.user.is_authenticated:
+        return redirect('patient_login')
+
+    patient_name = f"{request.user.first_name} {request.user.last_name}"
+    prescriptions = Prescription.objects.filter(patient_name=patient_name)
+
+    return render(request, 'patient_medical_history.html', {'prescriptions': prescriptions})
 
 
 # ---------------- Patient Registration ----------------
@@ -349,7 +355,7 @@ def doctor_register(request):
             image=image,
         )
 
-        messages.success(request, "Doctor registered successfully!")
+        
         return redirect('doctor_login')
 
     return render(request, 'doctor_register.html')
@@ -613,7 +619,7 @@ def appointments_doctor(request):
         # Find doctor whose email matches the logged-in user
         doctor = Doctor.objects.get(email=request.user.email)
     except Doctor.DoesNotExist:
-        messages.error(request, "Doctor profile not found for this account.")
+        messages.error(request, "No appointments found for this doctor.")
         return redirect('doctor_login')
 
     # Fetch only that doctor's patients (appointments)
@@ -623,19 +629,19 @@ def appointments_doctor(request):
         'appointments': appointments})
 
 def doctor_prescription(request, d_id):
-    # Get the appointment for which doctor is adding prescription
     appointment = get_object_or_404(Appointment, id=d_id)
 
     if request.method == 'POST':
-        # Get data from form
-        patient_name = appointment.patient.first_name + " " + appointment.patient.last_name
+        patient_name = f"{appointment.patient.first_name} {appointment.patient.last_name}"
+        doctor_name = f"{appointment.doctor.first_name} {appointment.doctor.last_name}"
         symptoms = appointment.symptoms
         disease = request.POST.get('disease')
         medicines = request.POST.get('medicines')
         notes = request.POST.get('notes')
 
-        # Save prescription
+        # Save to database
         Prescription.objects.create(
+            doctor_name=doctor_name,
             patient_name=patient_name,
             symptoms=symptoms,
             disease=disease,
@@ -644,10 +650,35 @@ def doctor_prescription(request, d_id):
         )
 
         messages.success(request, "Prescription saved successfully!")
-        return redirect('appointments_doctor')  # redirect to appointments list
+        return redirect('appointments_doctor')
 
     return render(request, 'doctor_prescription.html', {'appointment': appointment})
 
 def view_prescriptions(request):
-    prescriptions = Prescription.objects.all().order_by('-id')  # latest first
+    if not request.user.is_authenticated:
+        return redirect('doctor_login')
+
+    doctor_name = f"{request.user.first_name} {request.user.last_name}"
+    prescriptions = Prescription.objects.filter(doctor_name=doctor_name).order_by('-id')
+
     return render(request, 'view_prescriptions.html', {'prescriptions': prescriptions})
+
+
+def delete_appointment_doctor(request, app_id):
+    appointment = get_object_or_404(Appointment, id=app_id)
+    appointment.delete()
+    messages.success(request, "Appointment deleted successfully.")
+    return redirect('appointments_doctor')
+
+def delete_prescription(request, pre_id):
+    prescription = get_object_or_404(Prescription, id=pre_id)
+    prescription.delete()
+    messages.success(request, "Prescription deleted successfully.")
+    return redirect('view_prescriptions')
+
+def doctor_logout(request):
+    auth.logout(request)
+    messages.success(request, "You have been logged out.")
+    return redirect('doctor_login')
+
+

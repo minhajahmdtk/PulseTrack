@@ -1,11 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>About page</h1>
-</body>
-</html>
+{% extends 'base_home.html' %}
+
+{% block title %}About - Hospital Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-3 text-center">About Us</h2>
+  <p class="lead text-center">
+    Welcome to our Hospital Management System. Our goal is to provide an efficient and user-friendly platform for managing hospital operations.
+  </p>
+  <p>
+    This system helps administrators, doctors, patients, and receptionists manage appointments, patient records, and billing seamlessly.
+  </p>
+  <div class="text-center mt-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/2966/2966327.png" alt="Hospital Logo" width="120">
+  </div>
+</div>
+{% endblock %}

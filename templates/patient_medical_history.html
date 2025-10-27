@@ -1,0 +1,30 @@
+{% extends 'base_patient.html' %}
+{% block title %}My Medical History{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-center mb-4">My Medical History</h3>
+  <table class="table table-bordered text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>Doctor</th>
+        <th>Disease</th>
+        <th>Medicines</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in prescriptions %}
+      <tr>
+        <td>{{ p.doctor_name }}</td>
+        <td>{{ p.disease }}</td>
+        <td>{{ p.medicines }}</td>
+        <td>{{ p.notes }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No records found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
