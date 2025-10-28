@@ -1,18 +1,43 @@
 {% extends 'base_home.html' %}
+{% load static %}
 
-{% block title %}About - Hospital Management System{% endblock %}
+{% block title %}About - PulseTrack Hospital Management System{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="mb-3 text-center">About Us</h2>
-  <p class="lead text-center">
-    Welcome to our Hospital Management System. Our goal is to provide an efficient and user-friendly platform for managing hospital operations.
-  </p>
-  <p>
-    This system helps administrators, doctors, patients, and receptionists manage appointments, patient records, and billing seamlessly.
-  </p>
-  <div class="text-center mt-4">
-    <img src="https://cdn-icons-png.flaticon.com/512/2966/2966327.png" alt="Hospital Logo" width="120">
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Prevents scrolling */
+  }
+
+  body {
+    background: url("{% static 'about (2).jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .about-section {
+    transform: translateY(-100px); /* Moves box higher */
+  }
+</style>
+
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+  <div class="text-center p-4 rounded-4 about-section" >
+    <h2 class="mb-3 fw-bold text-light">PulseTrack</h2>
+
+    <p class="lead text-light">
+      Welcome to <strong>PulseTrack</strong> — a modern Hospital Management System designed to make healthcare smarter, faster, and more organized.
+    </p>
+
+    <p class="text-light">
+      Our mission is to connect healthcare professionals, staff, and patients through a single, unified platform — ensuring faster care, better communication, and accurate records.
+      Whether you’re an administrator managing hospital operations or a patient booking an appointment, PulseTrack helps you stay in control.
+    </p>
+
+    <p class="text-light mb-0">
+      Built with reliability, performance, and user-friendliness in mind, PulseTrack empowers hospitals to focus on what truly matters — 
+      <strong>delivering quality healthcare.</strong>
+    </p>
   </div>
 </div>
 {% endblock %}

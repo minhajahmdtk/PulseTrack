@@ -1,8 +1,20 @@
 {% extends 'base_home.html' %}
+{% load static %}
 
 {% block title %}Contact - Hospital Management System{% endblock %}
 
 {% block content %}
+<style>
+  body {
+    background: url("{% static 'contactus.jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+  }
+   .btn-dark:hover {
+    background-color: #28a745 !important; /* green on hover */
+    border-color: #28a745 !important;
+  }
+</style>
+
 <div class="container mt-5">
   <h2 class="mb-3 text-center">Contact Us</h2>
   <p class="lead text-center">We’d love to hear from you! Reach us using the form below.</p>
@@ -20,12 +32,12 @@
       <label for="message" class="form-label">Message</label>
       <textarea class="form-control" id="message" rows="4" placeholder="Your message here..."></textarea>
     </div>
-    <button type="submit" class="btn btn-primary w-100">Send Message</button>
+    <button type="submit" class="btn btn-dark w-100">Send Message</button>
   </form>
 
   <div class="text-center mt-4">
-    <p><i class="bi bi-telephone"></i> +91 98765 43210</p>
-    <p><i class="bi bi-envelope"></i> support@hospitalms.com</p>
+    <p><i class="bi bi-telephone"></i> +91 9645492417</p>
+    <p><i class="bi bi-envelope"></i> support@pulsetrack.com</p>
   </div>
 </div>
 {% endblock %}

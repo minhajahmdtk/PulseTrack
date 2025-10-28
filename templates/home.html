@@ -1,7 +1,30 @@
 {% extends 'base_home.html' %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h3>Home Page</h3>
+<style>
+  body {
+    background: url("{% static 'Home.jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+  }
+
+  .home-container {
+    
+    padding: 200px;
+    
+    text-align: end;
+    margin-top: 100px;
+    
+  }
+</style>
+
+<div class="container">
+  <div class="home-container">
+    <h1 class="fw-bold text-dark">Welcome to PulseTrack</h1>
+    <p class="lead">Your trusted Hospital Management System</p>
+  </div>
+</div>
 {% endblock %}
