@@ -653,8 +653,14 @@ def receptionist_logout (request):
 
 def patient_records(request):
     # Fetch all patients from the database
-    patients = Patient.objects.all()
-    
+    patients_list = Patient.objects.all()  # optional ordering
+
+    # Setup pagination — 5 patients per page (you can change this)
+    paginator = Paginator(patients_list, 6)
+    page_number = request.GET.get('page')
+    patients = paginator.get_page(page_number)
+
+    # Render template with paginated data
     return render(request, 'patient_records.html', {'patients': patients})
 
 def delete_patient_record(request, patient_id):
