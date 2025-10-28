@@ -2,29 +2,67 @@
 {% block title %}My Medical History{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h3 class="text-center mb-4">My Medical History</h3>
-  <table class="table table-bordered text-center">
-    <thead class="table-dark">
-      <tr>
-        <th>Doctor</th>
-        <th>Disease</th>
-        <th>Medicines</th>
-        <th>Notes</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for p in prescriptions %}
-      <tr>
-        <td>{{ p.doctor_name }}</td>
-        <td>{{ p.disease }}</td>
-        <td>{{ p.medicines }}</td>
-        <td>{{ p.notes }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="4">No records found.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="container mt-5">
+
+  <!-- Title -->
+  <h2 class="text-center fw-bold mb-4">My Medical History</h2>
+
+  <!-- Table Card -->
+  <div class="card shadow border-0 rounded-3 p-4">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center" style="border-radius: 10px; overflow: hidden;">
+        <thead class="table-dark">
+          <tr>
+            <th>Doctor</th>
+            <th>Disease</th>
+            <th>Medicines</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in prescriptions %}
+          <tr>
+            <td>{{ p.doctor_name }}</td>
+            <td>{{ p.disease }}</td>
+            <td>{{ p.medicines }}</td>
+            <td>{{ p.notes }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center text-muted py-3">No records found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if prescriptions.has_other_pages %}
+    <div class="d-flex justify-content-center mt-4">
+      <nav aria-label="Medical history pagination">
+        <ul class="pagination mb-0">
+          {% for num in prescriptions.paginator.page_range %}
+            {% if prescriptions.number == num %}
+              <li class="page-item active">
+                <span class="page-link bg-dark border-dark text-white">{{ num }}</span>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link text-dark" href="?page={{ num }}"
+                   style="border: 1px solid #ccc; color: black; text-decoration: none;">
+                  {{ num }}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+    {% endif %}
+    
+  </div>
 </div>
+
+
+
 {% endblock %}

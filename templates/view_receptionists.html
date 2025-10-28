@@ -16,6 +16,25 @@
     {% endfor %}
   {% endif %}
 
+  <!-- 🔍 Search Bar (Bootstrap styled) -->
+  <div class="row mb-4 justify-content-end">
+    <div class="col-md-6 col-lg-4">
+      <form method="GET" class="input-group shadow-sm">
+        <input 
+          type="text" 
+          name="search" 
+          value="{{ request.GET.search }}" 
+          class="form-control" 
+          placeholder="Search receptionists..."
+          aria-label="Search receptionists"
+        >
+        <button type="submit" class="btn btn-dark px-4">
+          <i class="bi bi-search"></i> Search
+        </button>
+      </form>
+    </div>
+  </div>
+
   <div class="card shadow border-0">
     <div class="card-body p-4">
       <div class="table-responsive">
@@ -65,7 +84,8 @@
                 </li>
               {% else %}
                 <li class="page-item">
-                  <a class="page-link bg-secondary border-secondary text-white" href="?page={{ i }}">
+                  <a class="page-link bg-secondary border-secondary text-white" 
+                     href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
                     {{ i }}
                   </a>
                 </li>

@@ -4,34 +4,82 @@
 {% block title %}Take Appointment{% endblock %}
 
 {% block content %}
-<h3 class="text-center mb-4">Available Doctors</h3>
+<link rel="stylesheet" href="{% static 'hms.css' %}">
 
-<div class="row">
-  {% for doctor in doctors %}
-    <div class="col-md-4 mb-4">
-      <div class="card h-100 text-center p-3">
-        <!-- Doctor Image -->
-        {% if doctor.image %}
-          <img src="{{ doctor.image.url }}" class="card-img-top mx-auto mb-3 rounded-circle" alt="Doctor Image" style="width:120px; height:120px; object-fit:cover;">
-        {% else %}
-          <img src="{% static 'images/default_avatar.png' %}" class="card-img-top mx-auto mb-3 rounded-circle" alt="Default Doctor" style="width:120px; height:120px; object-fit:cover;">
-        {% endif %}
+<div class="container mt-5">
+  <h3 class="text-center fw-bold mb-5 text-dark">Available Doctors</h3>
 
-        <!-- Doctor Info -->
-        <div class="card-body">
-          <h5 class="card-title">{{ doctor.first_name }} {{ doctor.last_name }}</h5>
-          <p class="text-muted mb-1">{{ doctor.specialty }}</p>
-          <p class="text-muted small">{{ doctor.Gender }}</p>
+  <div class="row">
+    {% for doctor in page_obj %}
+      <div class="col-md-4 mb-4">
+        <div class="card text-center border-0 shadow-sm h-100 p-4 rounded-4"
+             style="transition: all 0.3s ease; cursor: pointer;"
+             onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.2)'"
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)'">
 
-          <!-- Button to Add Appointment -->
-          <div class="d-flex justify-content-center gap-2">
-            <a href="{% url 'add_appointments' doctor.id %}" class="btn btn-primary btn-sm">Take Appointment</a>
+          <!-- Doctor Image -->
+          {% if doctor.image %}
+            <img src="{{ doctor.image.url }}" 
+                 class="rounded-circle mx-auto mb-3 border border-3 border-dark"
+                 alt="Doctor Image" 
+                 style="width:150px; height:150px; object-fit:cover;">
+          {% else %}
+            <img src="{% static 'images/default_avatar.png' %}" 
+                 class="rounded-circle mx-auto mb-3 border border-3 border-dark"
+                 alt="Default Doctor" 
+                 style="width:150px; height:150px; object-fit:cover;">
+          {% endif %}
+
+          <!-- Doctor Info -->
+          <div class="card-body">
+            <h5 class="card-title fw-bold mb-1 text-dark">
+              {{ doctor.first_name }} {{ doctor.last_name }}
+            </h5>
+            <p class="text-muted small mb-2">{{ doctor.Gender }}</p>
+
+            
+            <div class="mb-2">
+              <span class="badge bg-secondary text-white px-2 py-2 rounded-pill mb-1">
+                <i class="bi bi-briefcase-fill me-1"></i>
+                {{ doctor.specialization|default:"No specialization" }}
+              </span>
+            </div>
+
+            
+
+          
+
+            <a href="{% url 'add_appointments' doctor.id %}" 
+               class="btn btn-dark btn-sm mt-3 px-3 py-2 rounded-3" id="take">
+              Take Appointment
+            </a>
           </div>
         </div>
       </div>
-    </div>
-  {% empty %}
-    <p class="text-center">No doctors available at the moment.</p>
-  {% endfor %}
+    {% empty %}
+      <p class="text-center text-muted">No doctors available at the moment.</p>
+    {% endfor %}
+  </div>
+
+  <!-- ✅ Pagination -->
+  {% if page_obj.has_other_pages %}
+  <div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Doctor pagination">
+      <ul class="pagination mb-0">
+        {% for i in page_obj.paginator.page_range %}
+          {% if page_obj.number == i %}
+            <li class="page-item active">
+              <span class="page-link bg-dark border-dark text-white">{{ i }}</span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link bg-secondary border-secondary text-white" href="?page={{ i }}">{{ i }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}

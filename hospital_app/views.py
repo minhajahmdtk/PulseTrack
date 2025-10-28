@@ -41,8 +41,7 @@ def admin_login(request):
 
     return render(request, 'admin_login.html')
 
-# -------------------------
-# Admin Homedef doctor_home(request):
+
     if not request.user.is_authenticated:
         return redirect('doctor_login')
 
@@ -56,7 +55,7 @@ def admin_login(request):
     return render(request, 'doctor_home.html', {
         'total_appointments': total_appointments,
     })
-# -------------------------
+
 
 def admin_home(request):
     total_doctors = Doctor.objects.count()
@@ -194,7 +193,29 @@ def patient_login(request):
 
 
 def patient_home(request):
-    return render(request, 'patient_home.html')
+    if not request.user.is_authenticated:
+        return redirect('patient_login')
+
+    try:
+        # Get the actual Patient object linked to this user
+        patient = Patient.objects.get(email=request.user.email)
+    except Patient.DoesNotExist:
+        messages.error(request, "Patient profile not found.")
+        return redirect('patient_register')
+
+    # Count appointments by status for this patient
+    pending_count = Appointment.objects.filter(patient=patient, status='Pending').count()
+    confirmed_count = Appointment.objects.filter(patient=patient, status='Confirmed').count()
+    cancelled_count = Appointment.objects.filter(patient=patient, status='Cancelled').count()
+    completed_count = Appointment.objects.filter(patient=patient, status='Completed').count()
+
+    context = {
+        'pending_count': pending_count,
+        'confirmed_count': confirmed_count,
+        'cancelled_count': cancelled_count,
+        'completed_count': completed_count,
+    }
+    return render(request, 'patient_home.html', context)
 
 def edit_patient(request):
     return render(request, 'edit_patient.html')
@@ -206,8 +227,13 @@ def patient_logout(request):
 # ---------------- Appintments ----------------
 
 def take_appointment(request):
-    doctors = Doctor.objects.filter(is_active=True)  # only show active doctors
-    return render(request, 'take_appointment.html', {'doctors': doctors})
+    doctors = Doctor.objects.filter(is_active=True).order_by('first_name')  
+
+    paginator = Paginator(doctors, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'take_appointment.html', {'page_obj': page_obj})
 
 def view_appointments(request):
     return render(request, 'view_appointments.html')
@@ -224,15 +250,13 @@ def add_appointments(request, doctor_id):
         return redirect('patient_register')
 
     if request.method == 'POST':
-        disease = request.POST.get('disease')
         symptoms = request.POST.get('symptoms')
 
-        if disease and symptoms:
+        if symptoms:
             # Create appointment with no date yet
             Appointment.objects.create(
                 patient=patient,
                 doctor=doctor,
-                disease=disease,
                 symptoms=symptoms,
                 status='Pending'  # date is left as None for receptionist to assign
             )
@@ -250,7 +274,14 @@ def view_appointments(request):
         messages.error(request, "No patient profile found.")
         return redirect('patient_register')
 
-    appointments = Appointment.objects.filter(patient=patient).order_by('-id')  # latest first
+    # Fetch appointments (latest first)
+    appointments_list = Appointment.objects.filter(patient=patient).order_by('-id')
+
+    # --- Pagination Setup ---
+    paginator = Paginator(appointments_list, 6)  # 5 appointments per page
+    page_number = request.GET.get('page')
+    appointments = paginator.get_page(page_number)
+
     return render(request, 'view_appointments.html', {'appointments': appointments})
 
 
@@ -266,9 +297,16 @@ def patient_medical_history(request):
         return redirect('patient_login')
 
     patient_name = f"{request.user.first_name} {request.user.last_name}"
-    prescriptions = Prescription.objects.filter(patient_name=patient_name)
+    prescriptions = Prescription.objects.filter(patient_name=patient_name).order_by('-id')
 
-    return render(request, 'patient_medical_history.html', {'prescriptions': prescriptions})
+    # Pagination setup — 5 records per page
+    paginator = Paginator(prescriptions, 5)
+    page_number = request.GET.get('page')
+    prescriptions_page = paginator.get_page(page_number)
+
+    return render(request, 'patient_medical_history.html', {
+        'prescriptions': prescriptions_page
+    })
 
 
 # ---------------- Patient Registration ----------------
