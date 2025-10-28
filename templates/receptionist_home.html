@@ -1,53 +1,100 @@
 {% extends 'receptionist_base.html' %}
+{% load static %}
 
-{% block title %}Receptionist Home - HMS{% endblock %}
+{% block title %}Receptionist Dashboard - PulseTrack{% endblock %}
 
 {% block content %}
-<div class="text-center">
-  <h3>Welcome, Receptionist!</h3>
-  <p class="text-muted">Here’s a summary of today’s appointments.</p>
+<div class="container mt-4">
 
-  <div class="row mt-4">
-    <!-- New (Pending) Appointments -->
-    <div class="col-md-4">
-      <div class="card bg-light text-dark">
-        <h5><i class="bi bi-calendar-plus text-primary"></i> Pending Appointments</h5>
-        <h1>{{ new_appointments }}</h1>
+  <!-- Welcome -->
+  <div class="text-center mb-4">
+    <h4 class="fw-bold mb-1"> Welcome, {{ request.user.username }}</h4>
+    <p class="text-muted small mb-0">Here’s a quick overview of today’s appointments</p>
+  </div>
+
+  <!-- Top Row (3 cards) -->
+  <div class="row g-4 justify-content-center mb-4">
+
+    <!-- Pending -->
+    <div class="col-lg-3 col-md-4 col-sm-6 ">
+      <div class="card border-0 shadow-sm text-center p-4 bg-warning"
+           style="background:#fff; transition:all 0.3s ease; border-radius:15px;"
+           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 3px 12px rgba(0,0,0,0.08)'">
+        <div class="card-body ">
+          <i class="bi bi-hourglass-split text-dark fs-2 mb-3"></i>
+          <h5 class="fw-bold text-dark mb-1">Pending</h5>
+          <p class="text-muted small mb-2">Awaiting confirmation</p>
+          <h4 class="fw-bold text-dark mb-0">{{ new_appointments }}</h4>
+        </div>
       </div>
     </div>
 
-    <!-- Confirmed Appointments -->
-    <div class="col-md-4">
-      <div class="card bg-light text-dark">
-        <h5><i class="bi bi-check2-circle text-success"></i> Confirmed Appointments</h5>
-        <h1>{{ confirmed_appointments }}</h1>
+    <!-- Confirmed -->
+    <div class="col-lg-3 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm text-center p-4 bg-success"
+           style="background:#fff; transition:all 0.3s ease; border-radius:15px;"
+           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 3px 12px rgba(0,0,0,0.08)'">
+        <div class="card-body">
+          <i class="bi bi-check2-circle text-dark fs-2 mb-3"></i>
+          <h5 class="fw-bold text-dark mb-1">Confirmed</h5>
+          <p class="text-muted small mb-2">Approved by doctor</p>
+          <h4 class="fw-bold text-dark mb-0">{{ confirmed_appointments }}</h4>
+        </div>
       </div>
     </div>
 
-    <!-- Completed Appointments  -->
-    <div class="col-md-4">
-      <div class="card bg-light text-dark">
-        <h5><i class="bi bi-check2-circle text-success"></i> Completed Appointments</h5>
-        <h1>{{ completed_appointments }}</h1>
+    <!-- Completed -->
+    <div class="col-lg-3 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm text-center p-4 bg-info"
+           style="background:#fff; transition:all 0.3s ease; border-radius:15px;"
+           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 3px 12px rgba(0,0,0,0.08)'">
+        <div class="card-body">
+          <i class="bi bi-clipboard2-check text-dark fs-2 mb-3"></i>
+          <h5 class="fw-bold text-dark mb-1">Completed</h5>
+          <p class="text-muted small mb-2">Finished visits</p>
+          <h4 class="fw-bold text-dark mb-0">{{ completed_appointments }}</h4>
+        </div>
       </div>
     </div>
 
-<!-- Cancelled Appointments  -->
+  </div>
 
-    <div class="col-md-4">
-      <div class="card bg-light text-dark">
-        <h5><i class="bi bi-check2-circle text-success"></i> Cancelled\ Appointments</h5>
-        <h1>{{ cancelled_appointments }}</h1>
+  <!-- Bottom Row (2 cards) -->
+  <div class="row g-4 justify-content-center">
+
+    <!-- Cancelled -->
+    <div class="col-lg-3 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm text-center p-4 bg-danger"
+           style="background:#fff; transition:all 0.3s ease; border-radius:15px;"
+           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 3px 12px rgba(0,0,0,0.08)'">
+        <div class="card-body">
+          <i class="bi bi-x-circle text-dark fs-2 mb-3"></i>
+          <h5 class="fw-bold text-dark mb-1">Cancelled</h5>
+          <p class="text-muted small mb-2">Cancelled by patient</p>
+          <h4 class="fw-bold text-dark mb-0">{{ cancelled_appointments }}</h4>
+        </div>
       </div>
     </div>
 
-    <!-- Total Appointments -->
-    <div class="col-md-4">
-      <div class="card bg-light text-dark">
-        <h5><i class="bi bi-list-ul text-warning"></i> Total Appointments</h5>
-        <h1>{{ total_appointments }}</h1>
+    <!-- Total -->
+    <div class="col-lg-3 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm text-center p-4 bg-dark"
+           style="background:#fff; transition:all 0.3s ease; border-radius:15px;"
+           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 3px 12px rgba(0,0,0,0.08)'">
+        <div class="card-body">
+          <i class="bi bi-list-ul text-light fs-2 mb-3"></i>
+          <h5 class="fw-bold text-light mb-1">Total</h5>
+          <p class="text-light small mb-2">All appointments</p>
+          <h4 class="fw-bold text-light mb-0">{{ total_appointments }}</h4>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 {% endblock %}

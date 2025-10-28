@@ -82,3 +82,37 @@ transform: scale(1.07);
 
 }
 
+
+
+
+
+  /* 🔹 Card Hover Animation */
+  .hover-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .hover-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  /* 🔹 Card Title */
+  .hover-card h5 {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  /* 🔹 Card Number */
+  .hover-card h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  /* 🔹 Card Icon Style */
+  .hover-card i {
+    font-size: 1.8rem;
+    margin-right: 8px;
+  }

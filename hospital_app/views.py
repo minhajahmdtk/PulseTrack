@@ -596,12 +596,26 @@ def assign_status(request, s_id):
 
 
 def confirmed_appointment(request):
+    # Get confirmed appointments sorted by date
     appointments = Appointment.objects.filter(status='Confirmed').order_by('appointment_date')
-    return render(request, 'confirmed_appointment.html', {'appointments': appointments})
+
+    # Apply pagination — show 5 appointments per page (you can change this number)
+    paginator = Paginator(appointments, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Pass page_obj to the template
+    return render(request, 'confirmed_appointment.html', {'page_obj': page_obj})
 
 def all_appointments(request):
     appointments = Appointment.objects.all().order_by('-appointment_date')
-    return render(request, 'all_appointments.html', {'appointments': appointments})
+    
+    # Add pagination (5 appointments per page)
+    paginator = Paginator(appointments, 5)
+    page_number = request.GET.get('page')
+    page_ob = paginator.get_page(page_number)
+
+    return render(request, 'all_appointments.html', {'page_obj': page_ob})
 
 def delete_appointment(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
@@ -698,7 +712,12 @@ def add_patient(request):
         patient.save()
         return redirect('patient_records')  # redirect to patient list page
 
-    return render(request, 'add_patient.html')           
+    return render(request, 'add_patient.html')  
+
+def delete_patient(request, patient_id):
+    patient = get_object_or_404(Patient, id=patient_id)
+    patient.delete()
+    return redirect('patient_records')
 
 
 # ---------------- Doctor Page ----------------

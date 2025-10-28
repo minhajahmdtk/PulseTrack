@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2 class="text-center fw-bold mb-4">🗓️ New (Pending) Appointments</h2>
+  <h2 class="text-center fw-bold mb-4"> New Appointments</h2>
 
   <div class="card shadow border-0">
     <div class="card-body p-4">
@@ -12,9 +12,9 @@
         <table class="table table-bordered align-middle text-center" style="border-radius: 10px; overflow: hidden;">
           <thead class="table-dark">
             <tr>
-              <th>Doctor</th>
-              <th>Patient</th>
-              <th>Disease</th>
+              <th>Doctor Name</th>
+              <th>Patient Name</th>
+              
               <th>Description</th>
               <th>Appointment Date</th>
               <th>Appointment Time</th>
@@ -28,7 +28,7 @@
             <tr>
               <td>{{ appointment.doctor }}</td>
               <td>{{ appointment.patient }}</td>
-              <td>{{ appointment.disease }}</td>
+              
               <td>{{ appointment.symptoms }}</td>
               <td>{{ appointment.appointment_date|date:"M d, Y" }}</td>
               <td>{{ appointment.appointment_time|default:"Not Set" }}</td>
