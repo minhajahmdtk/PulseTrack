@@ -67,4 +67,6 @@ urlpatterns = [
     path('delete_appointment_doctor/<int:app_id>/', views.delete_appointment_doctor, name='delete_appointment_doctor'),
     path('doctor-logout/', views.doctor_logout, name='doctor_logout'),
     path('delete_prescription/<int:pre_id>/', views.delete_prescription, name='delete_prescription'),
+   
+
 ]

@@ -288,7 +288,7 @@ def view_appointments(request):
 def delete_appointment(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
     appointment.delete()
-    messages.success(request, "Appointment deleted successfully.")
+   
     return redirect('view_appointments')
 # ---------------- Medical History ----------------
 
@@ -558,7 +558,13 @@ def receptionist_home(request):
 
 def new_appointments(request):
     # Fetch all appointments ordered by date
-    appointments = Appointment.objects.all().order_by('appointment_date')
+    appointments_list = Appointment.objects.all().order_by('appointment_date')
+
+    # Set up paginator (e.g., 7 per page)
+    paginator = Paginator(appointments_list, 6)
+    page_number = request.GET.get('page')
+    appointments = paginator.get_page(page_number)
+
     return render(request, 'new_appointments.html', {'appointments': appointments})
 
 def assign_status(request, s_id):
@@ -663,10 +669,8 @@ def patient_records(request):
     # Render template with paginated data
     return render(request, 'patient_records.html', {'patients': patients})
 
-def delete_patient_record(request, patient_id):
-    patient = get_object_or_404(Patient, id=patient_id)
-    patient.delete()
-    messages.success(request, "Patient record deleted successfully.")
+
+    
     return redirect('patient_records')
 
 def add_patient(request):
@@ -765,7 +769,6 @@ def doctor_prescription(request, d_id):
             notes=notes
         )
 
-        messages.success(request, "Prescription saved successfully!")
         return redirect('appointments_doctor')
 
     return render(request, 'doctor_prescription.html', {'appointment': appointment})
@@ -796,12 +799,11 @@ def delete_appointment_doctor(request, app_id):
 def delete_prescription(request, pre_id):
     prescription = get_object_or_404(Prescription, id=pre_id)
     prescription.delete()
-    messages.success(request, "Prescription deleted successfully.")
     return redirect('view_prescriptions')
 
 def doctor_logout(request):
     auth.logout(request)
-    messages.success(request, "You have been logged out.")
+    
     return redirect('doctor_login')
 
 
