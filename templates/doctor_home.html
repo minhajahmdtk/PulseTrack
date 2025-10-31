@@ -11,18 +11,19 @@
     Welcome, Dr. {{ request.user.first_name }} {{ request.user.last_name }}
   </h2>
   <p class="lead text-muted">  
-  Manage your <strong>patients</strong>, review <strong>appointments</strong>,  
-  and stay on top of your <strong>medical duties</strong> efficiently with  
-  <span class="fw-semibold text-danger">PulseTrack </span>.
-</p>
-
-
- 
-
+    Manage your <strong>patients</strong>, review <strong>appointments</strong>,  
+    and stay on top of your <strong>medical duties</strong> efficiently with  
+    <span class="fw-semibold text-danger">PulseTrack</span>.
+  </p>
 
   <div class="row justify-content-center mt-4">
     <div class="col-10 col-sm-8 col-md-6 col-lg-4">
-      <div class="card text-white bg-dark text-center py-5 shadow-lg rounded-4 d-flex align-items-center justify-content-center" style="height: 250px;" id="card-home">
+      <div 
+        class="card text-white bg-dark text-center py-5 shadow-lg rounded-4 d-flex align-items-center justify-content-center" 
+        style="height: 250px; transition: all 0.3s ease;"
+        onmouseover="this.style.transform='translateY(-8px) scale(1.03)'; this.style.boxShadow='0 10px 25px rgba(255,0,0,0.4)'"
+        onmouseout="this.style.transform='none'; this.style.boxShadow='none'"
+      >
         <div>
           <h3 class="mb-3">Total Appointments</h3>
           <h1 class="fw-bold display-4">{{ total_appointments }}</h1>

@@ -6,37 +6,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Receptionist Dashboard{% endblock %}</title>
 
-  <!-- Bootstrap CSS & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <style>
+    
+
+    .navbar-brand img {
+      width: 200px;
+      height: 55px;
+      object-fit: contain;
+    }
+
+    
+    .navbar .dropdown-menu {
+      position: absolute !important;
+      top: 100% !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      margin-top: 5px !important;
+      z-index: 2000;
+    }
+
+    .navbar-collapse {
+      justify-content: space-between !important;
+    }
+  </style>
 </head>
 
 <body class="bg-light">
 
-  
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-    <div class="container py-2">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
+    <div class="container">
 
       
-     <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="{% static 'PulseTrack.png' %}" alt="PulseTrack" width="200px" height="45px" >
-      
-    </a>
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="{% static 'PulseTrack.png' %}" alt="PulseTrack Logo">
+      </a>
 
       
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarReceptionist">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+     
+      <div class="collapse navbar-collapse justify-content-center" id="navbarReceptionist">
 
-        
-        <ul class="navbar-nav mx-auto d-none d-lg-flex">
+        <ul class="navbar-nav mx-auto text-center">
           <li class="nav-item"><a class="nav-link" href="{% url 'receptionist_home' %}">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'add_appointment_receptionist' %}">Add Appointment</a></li>
 
-          
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Appointments</a>
             <ul class="dropdown-menu">
@@ -46,7 +65,6 @@
             </ul>
           </li>
 
-         
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Patients</a>
             <ul class="dropdown-menu">
@@ -56,40 +74,17 @@
           </li>
         </ul>
 
-       
-        <ul class="navbar-nav ms-auto d-none d-lg-flex">
+        
+        <ul class="navbar-nav ms-lg-auto text-center">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-              {{ request.user.username|default:"Receptionist" }}
+            <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center"
+               href="#" id="receptionistDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bime-1"></i> {{ request.user.username|default:"Receptionist" }}
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item text-danger" href="{% url 'home' %}">Logout</a></li>
-            </ul>
-          </li>
-        </ul>
-
-        <ul class="navbar-nav text-center d-lg-none w-100">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle fw-semibold" href="#" id="mainDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Menu
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="mainDropdown">
-              <li><a class="dropdown-item" href="{% url 'receptionist_home' %}">Home</a></li>
-              <li><a class="dropdown-item" href="{% url 'add_appointment_receptionist' %}">Add Appointment</a></li>
-              <li><hr class="dropdown-divider"></li>
-
-              <li class="dropdown-header fw-bold">Appointments</li>
-              <li><a class="dropdown-item" href="{% url 'new_appointments' %}">New Appointments</a></li>
-              <li><a class="dropdown-item" href="{% url 'confirmed_appointment' %}">Confirmed Appointments</a></li>
-              <li><a class="dropdown-item" href="{% url 'all_appointments' %}">All Appointments</a></li>
-              <li><hr class="dropdown-divider"></li>
-
-              <li class="dropdown-header fw-bold">Patients</li>
-              <li><a class="dropdown-item" href="{% url 'add_patient' %}">Add Patient</a></li>
-              <li><a class="dropdown-item" href="{% url 'patient_records' %}">View Patients</a></li>
-              <li><hr class="dropdown-divider"></li>
-
-              <li><a class="dropdown-item text-danger" href="{% url 'home' %}">Logout</a></li>
+            <ul class="dropdown-menu text-center" aria-labelledby="receptionistDropdown">
+              <li><a class="dropdown-item text-danger fw-semibold" href="{% url 'home' %}">
+                <i class="bi  me-1"></i> Logout
+              </a></li>
             </ul>
           </li>
         </ul>
@@ -98,18 +93,12 @@
     </div>
   </nav>
 
-
   <div class="container mt-5">
     {% block content %}
-    <div class="text-center">
-      <h1 class="fw-bold">Welcome to Receptionist Dashboard</h1>
-      <p class="text-muted">Manage appointments and patient details efficiently.</p>
-    </div>
+    
     {% endblock %}
   </div>
 
-
-  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
