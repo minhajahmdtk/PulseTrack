@@ -3,3 +3,4 @@ gunicorn
 whitenoise
 pillow
 psycopg2-binary
+gunicorn
